@@ -1,5 +1,6 @@
 extern crate time;
 
+use std::io;
 use std::io::prelude::*;
 use std::fs::File;
 
@@ -8,44 +9,96 @@ use time::PreciseTime;
 static mut GUESSES_COUNT: u32 = 0;
 
 fn main() {
-    let mut f = File::open("boards/board2.txt").unwrap();
+
+    let mut parsed_input;
+
+    // Main input loop 
+    loop {
+        println!("Which sudoku board do you want to solve? (Type a number between 1 and 7)");
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("Couldn't read from stdin");
+
+        let input = input.trim();
+
+        match input.parse() {
+            Ok(num) => {
+                parsed_input = num;
+            }
+            Err(_) => continue,
+        };
+
+        if 0 < parsed_input && parsed_input <= 7 {
+            break;
+        }
+    }
+
+    // Load board from file into a string
+    let mut f = File::open(format!("boards/board{}.txt", parsed_input)).unwrap();
     let mut s = String::new();
     f.read_to_string(&mut s).unwrap();
 
+    // Split board string by whitespace to get individual numbers
     let number_strings = s.split_whitespace();
     let number_strings: Vec<&str> = number_strings.collect();
 
 
+    // Create numbers array and populate from number_strings
     let mut numbers: [u32; 81] = [0; 81];
     let mut index = 0;
+    
     for number in number_strings {
         numbers[index] = number.parse::<u32>().unwrap();
         index += 1;
     }
 
+    // Print original board
+    let line_separator = "-----------------";
+    println!("{}", line_separator);
+
+    println!("Board {}:\n", parsed_input);
+    print_board(&numbers);
+
+    println!("{}", line_separator);
+
+    // Solve puzzle while calculating the time to find a solution
     let start_time = PreciseTime::now();
 
-    solve_sudoku(&mut numbers, 0);
+    let solved = solve_sudoku(&mut numbers, 0);
 
     let elapsed = start_time.to(PreciseTime::now());
 
+    // Convert solution time from nanoseconds to milliseconds
     let nanoseconds = elapsed.num_nanoseconds()
         .expect("couldn't unwrap return value from num_nanoseconds()");
-
     let milliseconds = (nanoseconds as f64) / 1000000.0;
 
-    println!("");
+    // Print solved board if a solution was found
+    println!("Solution:\n");
 
+    if solved {
+        print_board(&numbers);
+    } else {
+        println!("Recursive solver found no solutions.");
+    }
+
+    // Print solver statistics 
+    println!("{}", line_separator);
+
+    println!("\nSolution time: {}ms", milliseconds);
+    unsafe {
+        println!("Guesses: {}\n", GUESSES_COUNT);
+    }
+
+    println!("{}", line_separator);
+}
+
+fn print_board(puzzle: &[u32]) {
     for index in 0..81 {
-        print!("{:?} ", numbers[index]);
+        print!("{} ", puzzle[index]);
         if index % 9 == 8 {
             println!("");
         }
-    }
-
-    println!("\nRecursive solver took {}ms", milliseconds);
-    unsafe {
-        println!("Recursive solver took {} guesses\n", GUESSES_COUNT);
     }
 }
 
