@@ -128,7 +128,7 @@ fn print_board(puzzle: &[u32]) {
 }
 
 fn solve_sudoku(puzzle: &mut [u32], position: usize) -> bool {
-    if position == 80 {
+    if position == 81 {
         return verify_puzzle(puzzle);
     }
 
