@@ -10,11 +10,14 @@ static mut GUESSES_COUNT: u32 = 0;
 
 fn main() {
 
+    let number_of_boards = 8;
+
     let mut parsed_input;
 
     // Main input loop
     loop {
-        println!("Which sudoku board do you want to solve? (Type a number between 1 and 7)");
+        println!("Which sudoku board do you want to solve? (Type a number between 1 and {})",
+                 number_of_boards);
 
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Couldn't read from stdin");
@@ -28,7 +31,7 @@ fn main() {
             Err(_) => continue,
         };
 
-        if 0 < parsed_input && parsed_input <= 7 {
+        if 0 < parsed_input && parsed_input <= number_of_boards {
             break;
         }
     }
