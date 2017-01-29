@@ -12,7 +12,7 @@ fn main() {
 
     let mut parsed_input;
 
-    // Main input loop 
+    // Main input loop
     loop {
         println!("Which sudoku board do you want to solve? (Type a number between 1 and 7)");
 
@@ -46,7 +46,7 @@ fn main() {
     // Create numbers array and populate from number_strings
     let mut numbers: [u32; 81] = [0; 81];
     let mut index = 0;
-    
+
     for number in number_strings {
         numbers[index] = number.parse::<u32>().unwrap();
         index += 1;
@@ -56,10 +56,8 @@ fn main() {
     let line_separator = "-----------------";
     println!("{}", line_separator);
 
-    println!("Board {}:\n", parsed_input);
+    println!("\nBoard {}:", parsed_input);
     print_board(&numbers);
-
-    println!("{}", line_separator);
 
     // Solve puzzle while calculating the time to find a solution
     let start_time = PreciseTime::now();
@@ -74,7 +72,7 @@ fn main() {
     let milliseconds = (nanoseconds as f64) / 1000000.0;
 
     // Print solved board if a solution was found
-    println!("Solution:\n");
+    println!("\nSolution:");
 
     if solved {
         print_board(&numbers);
@@ -82,9 +80,7 @@ fn main() {
         println!("Recursive solver found no solutions.");
     }
 
-    // Print solver statistics 
-    println!("{}", line_separator);
-
+    // Print solver statistics
     println!("\nSolution time: {}ms", milliseconds);
     unsafe {
         println!("Guesses: {}\n", GUESSES_COUNT);
@@ -94,10 +90,30 @@ fn main() {
 }
 
 fn print_board(puzzle: &[u32]) {
+    let grid_separator = "-------------------------";
+    println!("{}", grid_separator);
+
     for index in 0..81 {
+        // Print this at the beginning of every row
+        if index % 9 == 0 {
+            print!("| ");
+        }
+
         print!("{} ", puzzle[index]);
+
+        // Print this after every third number
+        if index % 3 == 2 {
+            print!("| ");
+        }
+
+        // Print this at the end of every row
         if index % 9 == 8 {
             println!("");
+        }
+
+        // Print this after every three rows
+        if index % 27 == 26 {
+            println!("{}", grid_separator);
         }
     }
 }
