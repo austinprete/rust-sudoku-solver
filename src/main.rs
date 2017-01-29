@@ -35,7 +35,7 @@ fn main() {
     let milliseconds = (nanoseconds as f64) / 1000000.0;
 
     println!("");
-    
+
     for index in 0..81 {
         print!("{:?} ", numbers[index]);
         if index % 9 == 8 {
@@ -85,8 +85,7 @@ fn is_valid_guess(puzzle: &[u32], position: usize, guess: u32) -> bool {
 }
 
 fn valid_for_row(puzzle: &[u32], position: usize, guess: u32) -> bool {
-    // let row = position_to_row(position as u32);
-    let row = (position as u32) / 9;
+    let row = position_to_row(position as u32);
 
     let initial_index = row * 9;
     for index in initial_index..initial_index + 9 {
@@ -104,9 +103,8 @@ fn valid_for_row(puzzle: &[u32], position: usize, guess: u32) -> bool {
 }
 
 fn valid_for_column(puzzle: &[u32], position: usize, guess: u32) -> bool {
-    // let column = position_to_column(position as u32);
+    let column = position_to_column(position as u32);
 
-    let column = (position as u32) % 9;
     for row in 0..9 {
         let index = (row * 9 + column) as usize;
         if index == position {
@@ -157,19 +155,17 @@ fn verify_puzzle(puzzle: &[u32]) -> bool {
     true
 }
 
-// fn position_to_row(position: u32) -> u32 {
-//     position / 9
-// }
+fn position_to_row(position: u32) -> u32 {
+    position / 9
+}
 
-// fn position_to_column(position: u32) -> u32 {
-//     position % 9
-// }
+fn position_to_column(position: u32) -> u32 {
+    position % 9
+}
 
 fn position_to_box(position: u32) -> u32 {
-    // let box_row = position_to_row(position) / 3;
-    // let box_column = position_to_column(position) / 3;
+    let box_row = position_to_row(position) / 3;
+    let box_column = position_to_column(position) / 3;
 
-    let box_row = (position / 9) / 3;
-    let box_column = (position % 9) / 3;
     (box_row * 3) + box_column
 }
