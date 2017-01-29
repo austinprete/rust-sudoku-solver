@@ -102,7 +102,13 @@ fn print_board(puzzle: &[u32]) {
             print!("| ");
         }
 
-        print!("{} ", puzzle[index]);
+        let value = puzzle[index];
+
+        if value == 0 {
+            print!("X ");
+        } else {
+            print!("{} ", value);
+        }
 
         // Print this after every third number
         if index % 3 == 2 {
