@@ -10,7 +10,7 @@ static mut GUESSES_COUNT: u32 = 0;
 
 fn main() {
 
-    let number_of_boards = 11;
+    let number_of_boards = 12;
 
     let mut parsed_input;
 
