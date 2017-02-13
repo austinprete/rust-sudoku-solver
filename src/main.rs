@@ -48,11 +48,9 @@ fn main() {
 
     // Create numbers array and populate from number_strings
     let mut numbers: [u32; 81] = [0; 81];
-    let mut index = 0;
 
-    for number in number_strings {
+    for (index, number) in number_strings.iter().enumerate() {
         numbers[index] = number.parse::<u32>().unwrap();
-        index += 1;
     }
 
     // Print original board
@@ -96,7 +94,7 @@ fn print_board(puzzle: &[u32]) {
     let grid_separator = "-------------------------";
     println!("{}", grid_separator);
 
-    for index in 0..81 {
+    for (index, _) in puzzle.iter().enumerate() {
         // Print this at the beginning of every row
         if index % 9 == 0 {
             print!("| ");
@@ -223,9 +221,8 @@ fn valid_for_box(puzzle: &[u32], position: usize, guess: u32) -> bool {
 }
 
 fn verify_puzzle(puzzle: &[u32]) -> bool {
-    for index in 0..80 {
-        let value = puzzle[index];
-        if !(is_valid_guess(puzzle, index, value)) {
+    for (index, value) in puzzle.iter().enumerate() {
+        if !(is_valid_guess(puzzle, index,*value)) {
             return false;
         }
     }
